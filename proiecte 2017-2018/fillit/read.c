@@ -35,24 +35,38 @@ t_tetri 	*ft_fill(int fd, t_tetri *tetri)
 	int 			i;
 	int 			n;
 	unsigned char	c;
+	t_tetri			*next_tetri;
+	t_tetri			*current;
 
 	i = 0;
 	c = 'A';
 	if ((arr = (char**)malloc(sizeof(char*) * MAX_TETRIMINOS)) == NULL)
 		ft_error();
 	arr = ft_read(fd, arr, &n);
+
 	if (n == 0 || arr == NULL)
 		ft_error();
+
+	current = tetri;
 	while (i < n)
 	{
-		tetri[i].tetri = ft_memalloc(SIZE + 1);
-		tetri[i].tetri = ft_memcpy(tetri[i].tetri, arr[i], SIZE);
-		tetri[i].letter = c;
-		tetri[i].next = &(tetri[i + 1]); 
+		current->tetri = (char *) malloc (sizeof(char) * SIZE);
+		current->letter = c;
+		ft_memcpy(current->tetri, arr[i], SIZE);
+
+		if (i + 1 < n) 
+		{
+			next_tetri = malloc(sizeof *next_tetri);
+			next_tetri->next = NULL;
+			current->next = next_tetri;
+		} 
+
 		c++;
 		i++;
+
+		current = current->next;
 	}
-	tetri[i - 1].next = NULL;
+
 	return (tetri);
 }
 
@@ -85,66 +99,64 @@ void	ft_coord(char *s, char *coord)
 
 t_tetri		*ft_shape(t_tetri *tetri)
 {
-	int		i;
 	int		h;
 	int		w;
 	int		j;
 	char	coord[4];
+	t_tetri			*current;
 
-	i = 0;
-	while (tetri[i].tetri != NULL)
+	current = tetri;
+	while (current)
 	{
-		ft_coord(tetri[i].tetri, coord);
-		tetri[i].w = coord[1] - coord[0] + 1;
-		tetri[i].h = coord[3] - coord[2] + 1;
+		ft_coord(current->tetri, coord);
+		current->w = coord[1] - coord[0] + 1;
+		current->h = coord[3] - coord[2] + 1;
 		h = 0;
-		tetri[i].shape = (char**)malloc(sizeof(char*) * 5);
-		while (h < tetri[i].h)
+		current->shape = (char**)malloc(sizeof(char*) * 5);
+		while (h < current->h)
 		{
 			w = 0;
-			tetri[i].shape[h] = (char*)malloc(sizeof(char) * 5);
-			while (w < tetri[i].w)
+			current->shape[h] = (char*)malloc(sizeof(char) * 5);
+			while (w < current->w)
 			{
 				j = coord[0] + w + (coord[2] + h) * 5;
-				tetri[i].shape[h][w] = tetri[i].tetri[j];
+				current->shape[h][w] = current->tetri[j];
 				w++;
 			}
 			h++;
 		}
-		i++;
+		current = current->next;
 	}
+
 	return (tetri);
 }
 
 int		ft_process(t_tetri *tetri)
 {
-	int 	i;
 	int		h;
 	int		w;
 	int		n;
+	t_tetri			*current;
 
-	i = 0;
 	n = 0;
-	while (tetri[i].shape != NULL)
+	current = tetri;
+	while (current != NULL)
 	{
 		h = 0;
-		while (h < tetri[i].h)
+		while (h < current->h)
 		{
 			w = 0;
-			while (w < tetri[i].w)
+			while (w < current->w)
 			{
-				if (tetri[i].shape[h][w] == '#')
-					tetri[i].shape[h][w] = tetri[i].letter;
-				printf("%c ", tetri[i].shape[h][w]);
+				if (current->shape[h][w] == '#')
+					current->shape[h][w] = current->letter;
 				w++;
 			}
 			h++;
-			printf("\n");
 		}
-		printf("\n");
-		n = n > (tetri[i].letter - 'A' + 1) ? n : (tetri[i].letter - 'A' + 1);
-		i++;
+		n = n > (current->letter - 'A' + 1) ? n : (current->letter - 'A' + 1);
+		current = current->next;
 	}
-	fflush(stdout);
+
 	return (n);
 }

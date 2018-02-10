@@ -21,12 +21,18 @@ int		main(int argc, char **argv)
 		ft_putstr(" input_file\n");
 		return (1);
 	}
-	tetri = (t_tetri*)malloc(sizeof(t_tetri));
-	tetri = ft_shape(ft_fill((fd = open(argv[1], O_RDONLY)), tetri));
-	n = ft_process(tetri);
+
+	tetri = malloc(sizeof *tetri);
+	tetri->next = NULL;
+
+	fd = open(argv[1], O_RDONLY);
+	ft_fill(fd, tetri);
 	close(fd);
 
-	printf("Solution= %d", ft_solve(tetri, n));
+	ft_shape(tetri);
+	n = ft_process(tetri);
+
+	printf("Solution= %d\n", ft_solve(tetri, n));
 
 	return (0);
 }

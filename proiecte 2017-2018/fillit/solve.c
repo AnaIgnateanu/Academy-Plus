@@ -61,6 +61,8 @@ int		ft_solve_size(t_tetri* shape, int *visited, char **map, int size, int count
 	// 	return (1);
 	// }
 
+	// ft_print(map, size);
+
 	x = 0;
 	while (x < size) 
 	{
