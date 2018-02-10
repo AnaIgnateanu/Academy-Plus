@@ -2,7 +2,8 @@ NAME = fillit
 
 SRC = main.c\
 		read.c\
-		solve.c
+		solve.c\
+		aux.c
 
 LIBFT = ./libft/libft.a
 
@@ -12,9 +13,7 @@ HEADER = fillit.h
 
 CC = gcc 
 
-FLAGS = -Wall -Wextra -Werror -g
-# name for executable
-EXE = fillit
+FLAGS = -Wall -Wextra -Werror
 
 all : $(NAME) 
 

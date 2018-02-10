@@ -11,7 +11,7 @@ void	ft_error(void)
 int		main(int argc, char **argv)
 {
 	int 		fd;
-	t_tetri		tetri[MAX_TETRIMINOS + 1];
+	t_tetri		*tetri;
 	int 		n;
 
 	if (argc != 2)
@@ -21,11 +21,12 @@ int		main(int argc, char **argv)
 		ft_putstr(" input_file\n");
 		return (1);
 	}
-	ft_bzero(tetri, sizeof(t_tetri) * (MAX_TETRIMINOS + 1));
-	n = ft_process(ft_shape(ft_fill((fd = open(argv[1], O_RDONLY)), tetri)));
+	tetri = (t_tetri*)malloc(sizeof(t_tetri));
+	tetri = ft_shape(ft_fill((fd = open(argv[1], O_RDONLY)), tetri));
+	n = ft_process(tetri);
 	close(fd);
 
-	ft_solve(tetri, n);
+	printf("Solution= %d", ft_solve(tetri, n));
 
 	return (0);
 }

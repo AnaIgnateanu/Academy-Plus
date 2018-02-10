@@ -9,7 +9,7 @@ char		**ft_read(int fd, char **arr, int *n)
 	
 	i = 0;
 	while ((ret = read(fd, buf, SIZE + 1)) >= SIZE)
-	{
+	{	
 		if ((arr[i] = (char*)malloc(sizeof(char) * (SIZE + 1))) == NULL)
 			ft_error();
 		j = 0;
@@ -52,7 +52,7 @@ t_tetri 	*ft_fill(int fd, t_tetri *tetri)
 		c++;
 		i++;
 	}
-	tetri[i].next = NULL;
+	tetri[i - 1].next = NULL;
 	return (tetri);
 }
 
@@ -138,13 +138,13 @@ int		ft_process(t_tetri *tetri)
 				printf("%c ", tetri[i].shape[h][w]);
 				w++;
 			}
-			printf("\n");
 			h++;
+			printf("\n");
 		}
+		printf("\n");
 		n = n > (tetri[i].letter - 'A' + 1) ? n : (tetri[i].letter - 'A' + 1);
 		i++;
-		printf("\n");
 	}
-	printf(" n = %d\n", n);
+	fflush(stdout);
 	return (n);
 }
